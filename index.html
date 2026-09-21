@@ -193,6 +193,20 @@
   }
   .focus li:nth-child(even) { border-top-color: var(--sunset); }
 
+  /* Skills */
+  .skills { padding-block: 1rem 3rem; }
+  .skills h2 { font-family: var(--display); font-weight: 800; font-size: clamp(1.75rem, 4vw, 2.5rem); letter-spacing: -0.02em; line-height: 1.1; }
+  .skill-grid { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .skill { display: flex; flex-direction: column; gap: 0.2rem; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 1.1rem 1.25rem; }
+  .skill-name { font-family: var(--display); font-weight: 800; font-size: 1.2rem; line-height: 1.25; }
+  .skill-detail { color: var(--muted); font-size: 0.92rem; line-height: 1.4; }
+  .skill-level { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: auto; padding-top: 0.9rem; font-size: 0.85rem; font-weight: 600; }
+  .skill-level.advanced { color: var(--link); }
+  .skill-level.intermediate { color: var(--sky); }
+  .meter { display: flex; gap: 4px; width: 84px; }
+  .meter span { height: 6px; flex: 1; border-radius: 999px; background: var(--line); }
+  .meter span.on { background: var(--grad); }
+
   /* Experience */
   .experience { padding-block: 1rem 3rem; }
   .exp-list { list-style: none; display: grid; gap: 1.5rem; margin-top: 1.75rem; padding-left: 1.75rem; border-left: 2px solid var(--line); max-width: 920px; }
@@ -294,6 +308,7 @@
   <div class="wrap">
     <a class="logo" href="#" id="logo">FB</a>
     <nav aria-label="Main menu">
+      <a href="#skills">Skills</a>
       <a href="#experience">Experience</a>
       <a href="#projects">Projects</a>
       <a href="#contact">Contact</a>
@@ -344,6 +359,13 @@
     <div class="wrap">
       <h2>What I'm into</h2>
       <ul id="focus"></ul>
+    </div>
+  </section>
+
+  <section class="skills" id="skills">
+    <div class="wrap">
+      <h2>Skills</h2>
+      <ul class="skill-grid" id="skill-grid"></ul>
     </div>
   </section>
 
@@ -414,6 +436,17 @@
     email: "baswarafajar@gmail.com",
     focus: ["Web development", "System development", "IT infrastructure", "Data management"]
   };
+
+  // level: "Advanced" or "Intermediate" (or "Beginner"). "detail" is optional small text under the name.
+  const SKILLS = [
+    { name: "HTML", level: "Advanced" },
+    { name: "PHP", level: "Advanced" },
+    { name: "Synology NAS", level: "Advanced" },
+    { name: "JavaScript", detail: "Node.js", level: "Intermediate" },
+    { name: "Python", level: "Intermediate" },
+    { name: "Flutter", detail: "Mobile development", level: "Intermediate" },
+    { name: "Swift", detail: "iOS development", level: "Intermediate" }
+  ];
 
   // The first item is treated as your current job when its period ends with "Present".
   const EXPERIENCE = [
@@ -565,6 +598,42 @@
     const li = document.createElement("li");
     li.textContent = f;
     $("focus").appendChild(li);
+  });
+
+  // Skills
+  const LEVELS = { beginner: 1, intermediate: 2, advanced: 3 };
+  SKILLS.forEach((s) => {
+    const key = s.level.toLowerCase();
+    const li = document.createElement("li");
+    li.className = "skill";
+
+    const name = document.createElement("span");
+    name.className = "skill-name";
+    name.textContent = s.name;
+    li.appendChild(name);
+
+    if (s.detail) {
+      const d = document.createElement("span");
+      d.className = "skill-detail";
+      d.textContent = s.detail;
+      li.appendChild(d);
+    }
+
+    const lvl = document.createElement("div");
+    lvl.className = "skill-level " + key;
+    const label = document.createElement("span");
+    label.textContent = s.level;
+    const meter = document.createElement("span");
+    meter.className = "meter";
+    meter.setAttribute("aria-hidden", "true");
+    for (let i = 1; i <= 3; i++) {
+      const bar = document.createElement("span");
+      if (i <= (LEVELS[key] || 1)) bar.className = "on";
+      meter.appendChild(bar);
+    }
+    lvl.append(label, meter);
+    li.appendChild(lvl);
+    $("skill-grid").appendChild(li);
   });
 
   // Work experience
