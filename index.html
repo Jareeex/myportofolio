@@ -5,7 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fajar Baswara - IT Support &amp; Web Developer</title>
 <meta name="description" content="Portfolio of Fajar Baswara, IT Support and Web Developer.">
+<meta name="theme-color" content="#0A1428" id="theme-color-meta">
 <meta name="color-scheme" content="dark light">
+<meta property="og:title" content="Fajar Baswara - IT Support &amp; Web Developer">
+<meta property="og:description" content="Portfolio, skills, experience, and projects by Fajar Baswara.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" id="favicon">
 <script>
   /* Set the theme before the page paints so there is no flash */
   (function () {
@@ -88,6 +94,15 @@
 
   .wrap { width: min(1240px, 100% - var(--gutter)); margin-inline: auto; }
 
+  /* Skip link */
+  .skip-link {
+    position: absolute; left: -9999px; top: 0; z-index: 30;
+    background: var(--card); color: var(--ink);
+    padding: 0.75rem 1.25rem; border-radius: 0 0 12px 0;
+    font-weight: 600; text-decoration: none; border: 1px solid var(--line);
+  }
+  .skip-link:focus { left: 0; }
+
   /* Header */
   .top {
     position: sticky; top: 0; z-index: 10;
@@ -106,8 +121,9 @@
   }
   .top nav::-webkit-scrollbar { display: none; }
   .top a { text-decoration: none; }
-  .top nav a { padding: 0.4rem 0.9rem; border-radius: 999px; color: var(--muted); white-space: nowrap; }
+  .top nav a { padding: 0.4rem 0.9rem; border-radius: 999px; color: var(--muted); white-space: nowrap; transition: background-color 0.2s ease, color 0.2s ease; }
   .top nav a:hover { background: var(--card); color: var(--ink); }
+  .top nav a[aria-current="true"] { background: var(--card); color: var(--ink); }
   .theme-toggle {
     flex: none;
     width: 2.75rem; height: 2.75rem; border-radius: 50%;
@@ -175,20 +191,30 @@
   .desc { max-width: 64ch; font-size: 1.1rem; }
   .desc p + p { margin-top: 1rem; color: var(--muted); }
   .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
-  .btn { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; padding: 0.85rem 1.6rem; border-radius: 999px; font-weight: 600; text-decoration: none; border: 1.5px solid var(--line); transition: transform 0.2s ease, border-color 0.2s ease; overflow-wrap: anywhere; }
+  .btn { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; padding: 0.85rem 1.6rem; border-radius: 999px; font-weight: 600; text-decoration: none; border: 1.5px solid var(--line); transition: transform 0.2s ease, border-color 0.2s ease; overflow-wrap: anywhere; cursor: pointer; font: inherit; }
   .btn svg { width: 1.15rem; height: 1.15rem; flex: none; }
   .btn.primary { background: var(--grad); color: var(--on-accent); border-color: transparent; }
   .btn.ghost { color: var(--ink); background: var(--card); }
   .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.7; cursor: default; }
   .now {
     font-size: 0.95rem; color: var(--muted);
     background: var(--card); border: 1px solid var(--line); border-radius: 18px;
     padding: 1.1rem 1.5rem; max-width: 22rem;
   }
   .now strong { display: block; color: var(--ink); font-family: var(--display); font-size: 1.4rem; font-weight: 800; line-height: 1.2; margin-top: 0.15rem; }
+  .stat-line { display: block; margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px solid var(--line); font-size: 0.85rem; }
+
+  /* One deliberate entrance moment on load */
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .identity, .desc, .actions, .now { opacity: 0; animation: rise 0.6s ease forwards; }
+  .identity { animation-delay: 0s; }
+  .desc { animation-delay: 0.1s; }
+  .actions { animation-delay: 0.18s; }
+  .now { animation-delay: 0.24s; }
 
   /* Section titles */
-  .focus h2, .projects-head h2, .experience h2 { font-family: var(--display); font-weight: 800; font-size: clamp(1.6rem, 4vw, 2.5rem); letter-spacing: -0.02em; line-height: 1.1; }
+  .focus h2, .projects-head h2, .experience h2, .education h2 { font-family: var(--display); font-weight: 800; font-size: clamp(1.6rem, 4vw, 2.5rem); letter-spacing: -0.02em; line-height: 1.1; }
 
   /* Focus */
   .focus { padding-block: 1rem 3rem; }
@@ -215,8 +241,8 @@
   .meter span { height: 6px; flex: 1; border-radius: 999px; background: var(--line); }
   .meter span.on { background: var(--grad); }
 
-  /* Experience */
-  .experience { padding-block: 1rem 3rem; }
+  /* Experience / Education (shared timeline styling) */
+  .experience, .education { padding-block: 1rem 3rem; }
   .exp-list { list-style: none; display: grid; gap: 1.5rem; margin-top: 1.75rem; padding-left: var(--tl); border-left: 2px solid var(--line); max-width: 920px; }
   .exp-item { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 1.4rem 1.6rem; }
   .exp-item::before {
@@ -267,7 +293,13 @@
   .tags li { font-size: 0.82rem; font-weight: 500; padding: 0.1rem 0.7rem; border: 1px solid var(--line); border-radius: 999px; background: var(--card); color: var(--ink); }
 
   /* Photo viewer */
-  dialog { margin: auto; border: 1px solid var(--line); border-radius: 18px; background: var(--bg-deep); color: var(--ink); width: min(1100px, 94vw); max-height: 94vh; overflow: auto; padding: 1rem; overscroll-behavior: contain; }
+  dialog {
+    margin: auto; border: 1px solid var(--line); border-radius: 18px; background: var(--bg-deep); color: var(--ink);
+    width: min(1100px, 94vw); max-height: 94vh; overflow: auto; padding: 1rem; overscroll-behavior: contain;
+    opacity: 0; transform: translateY(10px) scale(0.98);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+  dialog.open { opacity: 1; transform: translateY(0) scale(1); }
   dialog::backdrop { background: rgba(3, 8, 20, 0.85); backdrop-filter: blur(4px); }
   dialog .bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
   dialog .bar strong { font-family: var(--display); font-size: 1.15rem; line-height: 1.2; }
@@ -288,6 +320,19 @@
 
   .badge { position: absolute; right: 0.75rem; bottom: 0.75rem; background: var(--badge-bg); border: 1px solid var(--line); color: var(--ink); font-size: 0.82rem; font-weight: 600; padding: 0.15rem 0.7rem; border-radius: 999px; }
   .visit { align-self: flex-start; color: var(--sky); font-weight: 600; text-underline-offset: 4px; padding-block: 0.4rem; }
+
+  /* Back to top */
+  .top-btn {
+    position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 9;
+    width: 3rem; height: 3rem; border-radius: 50%; border: 0;
+    background: var(--grad); color: var(--on-accent);
+    display: grid; place-items: center; cursor: pointer;
+    box-shadow: 0 14px 30px -12px var(--shadow-hover);
+    opacity: 0; pointer-events: none; transform: translateY(10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .top-btn.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .top-btn svg { width: 1.3rem; height: 1.3rem; }
 
   /* Footer */
   footer { border-top: 1px solid var(--line); background: var(--bg-deep); padding-block: 3rem; }
@@ -321,10 +366,11 @@
     .top nav a { padding: 0.5rem 0.7rem; font-size: 0.95rem; }
     .avatar { width: 104px; border-radius: 26px; }
     .avatar-inner { border-radius: 22px; font-size: 2rem; }
-    .focus, .skills, .experience { padding-bottom: 2.25rem; }
+    .focus, .skills, .experience, .education { padding-bottom: 2.25rem; }
     .projects { padding-bottom: 3.5rem; }
     footer { padding-block: 2.25rem; }
     footer .wrap { align-items: flex-start; }
+    .top-btn { right: 1rem; bottom: 1rem; width: 2.75rem; height: 2.75rem; }
   }
 
   /* Phones */
@@ -381,17 +427,29 @@
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .shot img, .btn { transition: none; }
+    .shot img, .btn, .top-btn, dialog { transition: none; }
+    .identity, .desc, .actions, .now { animation: none; opacity: 1; }
+  }
+
+  @media print {
+    .top, .theme-toggle, .top-btn, .skip-link, dialog, .actions, .now, .badge { display: none !important; }
+    body { background: #fff; color: #000; }
+    .card, .exp-item, .skill, .focus li { break-inside: avoid; border-color: #ccc; box-shadow: none; background: #fff; }
+    a { color: #000; text-decoration: underline; }
+    .identity, .desc, .actions, .now { opacity: 1; animation: none; }
   }
 </style>
 </head>
 <body>
+
+<a href="#main" class="skip-link">Skip to content</a>
 
 <header class="top">
   <div class="wrap">
     <nav aria-label="Main menu">
       <a href="#skills">Skills</a>
       <a href="#experience">Experience</a>
+      <a href="#education" id="nav-education">Education</a>
       <a href="#projects">Projects</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -402,7 +460,7 @@
   </div>
 </header>
 
-<main>
+<main id="main">
   <section class="hero">
     <div class="wrap">
       <div class="identity">
@@ -436,6 +494,7 @@
           Right now
           <strong id="now-role"></strong>
           <span id="now-company"></span>
+          <span class="stat-line" id="stat-line"></span>
         </div>
       </div>
     </div>
@@ -462,6 +521,13 @@
     </div>
   </section>
 
+  <section class="education" id="education">
+    <div class="wrap">
+      <h2>Education</h2>
+      <ol class="exp-list" id="edu-list"></ol>
+    </div>
+  </section>
+
   <section class="projects" id="projects">
     <div class="wrap">
       <div class="projects-head">
@@ -478,7 +544,7 @@
     <div>
       <h2>Let's talk!</h2>
       <p>Got a project or just want to say hi? Message me anytime.</p>
-      <div class="contact-links">
+      <div class="contact-links" id="contact-links">
         <a class="btn wa" id="wa-foot" href="#" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.25-1.38A9.9 9.9 0 1 0 12.04 2zm0 1.8a8.1 8.1 0 1 1-4.13 15.08l-.3-.18-3.12.82.83-3.04-.2-.31A8.1 8.1 0 0 1 12.04 3.8zM8.6 7.6c-.2 0-.5.07-.75.35-.26.28-1 1-1 2.4 0 1.42 1.03 2.8 1.17 3 .15.2 2 3.2 4.96 4.36 2.45.96 2.95.77 3.48.72.53-.05 1.7-.7 1.95-1.37.24-.68.24-1.26.17-1.38-.07-.12-.27-.2-.56-.34-.3-.15-1.7-.84-1.97-.94-.26-.1-.46-.15-.65.15-.2.3-.75.94-.92 1.13-.17.2-.34.22-.63.07-.3-.15-1.24-.46-2.36-1.46-.87-.78-1.46-1.74-1.63-2.03-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.65-1.6-.9-2.18-.23-.56-.47-.48-.65-.49h-.55z"/></svg>
           <span id="wa-text">WhatsApp</span>
@@ -493,6 +559,10 @@
     <small id="copy"></small>
   </div>
 </footer>
+
+<button class="top-btn" id="top-btn" type="button" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
 
 <dialog id="viewer" aria-label="Project photos">
   <div class="bar">
@@ -525,6 +595,9 @@
     whatsappLabel: "+62 851-4240-4274",  // how the number is shown
     email: "baswarafajar@gmail.com",
     github: "https://github.com/Jareeex",
+    linkedin: "https://id.linkedin.com/in/fajar-baswara-124a16201",// optional; leave "" to hide the button
+    instagram: "",                       // optional; leave "" to hide the button
+    resumeUrl: "",                        // link to a CV/resume PDF; leave "" to hide the "Download CV" button
     focus: ["Web development", "System development", "IT infrastructure", "Data management"]
   };
 
@@ -576,6 +649,17 @@
         "Conducted corrective maintenance to troubleshoot and resolve technical issues.",
         "Supported the installation of IT equipment and systems."
       ]
+    }
+  ];
+
+  // Leave EDUCATION as [] to hide the Education section entirely.
+  // "period" is optional — leave it "" if you'd rather not show dates.
+  const EDUCATION = [
+    {
+      degree: "Bachelor's Degree, Information Technology",
+      institution: "Universitas Indraprasta PGRI",
+      period: "",
+      location: "Jakarta, Indonesia"
     }
   ];
 
@@ -644,6 +728,8 @@
   function applyTheme(t) {
     root.setAttribute("data-theme", t);
     $("theme-toggle").setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
+    const bg = getComputedStyle(root).getPropertyValue("--bg").trim();
+    if (bg) $("theme-color-meta").setAttribute("content", bg);
   }
   applyTheme(root.getAttribute("data-theme"));
   $("theme-toggle").onclick = () => {
@@ -664,6 +750,8 @@
   $("name").textContent = PROFILE.greeting;
   $("role").textContent = PROFILE.role;
   document.title = PROFILE.name + " - " + PROFILE.role;
+  document.querySelector('meta[name="description"]').setAttribute("content", PROFILE.name + " — " + PROFILE.role + ". Skills, experience, and projects.");
+  document.querySelector('meta[property="og:title"]').setAttribute("content", PROFILE.name + " - " + PROFILE.role);
   const initials = PROFILE.name.split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase();
   $("initials").textContent = initials;
   $("me").src = PROFILE.photo;
@@ -674,6 +762,34 @@
     $("about").appendChild(p);
   });
 
+  // Favicon: a small monogram matching the avatar treatment
+  (function () {
+    const isLight = root.getAttribute("data-theme") === "light";
+    const bg = isLight ? "#F3F7FD" : "#0A1428";
+    const fg = isLight ? "#D9650A" : "#FFA24A";
+    const svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>" +
+      "<rect width='64' height='64' rx='14' fill='" + bg + "'/>" +
+      "<text x='32' y='41' font-family='Arial, sans-serif' font-size='26' font-weight='700' fill='" + fg + "' text-anchor='middle'>" + initials + "</text>" +
+      "</svg>";
+    $("favicon").href = "data:image/svg+xml," + encodeURIComponent(svg);
+  })();
+
+  // Structured data for search engines
+  (function () {
+    const sameAs = [PROFILE.github, PROFILE.linkedin, PROFILE.instagram].filter(Boolean);
+    const ld = document.createElement("script");
+    ld.type = "application/ld+json";
+    ld.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": PROFILE.name,
+      "jobTitle": PROFILE.role,
+      "email": PROFILE.email,
+      "sameAs": sameAs
+    });
+    document.head.appendChild(ld);
+  })();
+
   // "Right now" card (uses the first experience item)
   const current = EXPERIENCE[0];
   if (current) {
@@ -682,6 +798,27 @@
   } else {
     document.querySelector(".now").remove();
   }
+
+  // Quick stats line: years of experience (from the earliest role's start date) + projects shipped
+  (function () {
+    const starts = EXPERIENCE.map((job) => {
+      const first = job.period.split(/[–-]/)[0].trim();
+      const d = new Date(first);
+      return isNaN(d) ? null : d;
+    }).filter(Boolean);
+    const bits = [];
+    if (starts.length) {
+      const earliest = new Date(Math.min(...starts));
+      const years = Math.max(1, Math.floor((now - earliest) / (365.25 * 24 * 3600 * 1000)));
+      bits.push(years + "+ yrs experience");
+    }
+    if (PROJECTS.length) bits.push(PROJECTS.length + (PROJECTS.length === 1 ? " project" : " projects") + " shipped");
+    const line = $("stat-line");
+    if (line) {
+      if (bits.length) line.textContent = bits.join(" · ");
+      else line.remove();
+    }
+  })();
 
   // Focus areas
   PROFILE.focus.forEach((f) => {
@@ -758,6 +895,34 @@
     $("exp-list").appendChild(li);
   });
 
+  // Education (hidden entirely when the list is empty)
+  if (EDUCATION.length) {
+    EDUCATION.forEach((edu) => {
+      const li = document.createElement("li");
+      li.className = "exp-item";
+
+      const h = document.createElement("h3");
+      h.textContent = edu.degree;
+      const c = document.createElement("p");
+      c.className = "company";
+      c.textContent = edu.institution;
+
+      const meta = document.createElement("ul");
+      meta.className = "meta";
+      [edu.period, edu.location].filter(Boolean).forEach((text) => {
+        const m = document.createElement("li");
+        m.textContent = text;
+        meta.appendChild(m);
+      });
+
+      li.append(h, c, meta);
+      $("edu-list").appendChild(li);
+    });
+  } else {
+    document.querySelector(".education").remove();
+    $("nav-education").remove();
+  }
+
   // Contact
   const waNumber = PROFILE.whatsapp.replace(/\D/g, "");
   const waLink = "https://wa.me/" + waNumber + "?text=" + encodeURIComponent("Hi Fajar!");
@@ -767,8 +932,39 @@
   $("gh-foot").href = PROFILE.github;
   $("wa-text").textContent = "WhatsApp " + PROFILE.whatsappLabel;
   $("email").textContent = PROFILE.email;
-  $("email").href = "mailto:" + PROFILE.email;
+  $("email").href = "mailto:" + PROFILE.email + "?subject=" + encodeURIComponent("Hi " + PROFILE.name.split(" ")[0] + "!");
   $("copy").textContent = "© " + now.getFullYear() + " " + PROFILE.name;
+
+  // Optional social buttons (only shown when filled in above)
+  const socialLinks = $("contact-links");
+  const ghFoot = $("gh-foot");
+  if (PROFILE.linkedin) {
+    const a = document.createElement("a");
+    a.className = "btn ghost";
+    a.href = PROFILE.linkedin;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5C3.34 3.5 2 4.84 2 6.48c0 1.63 1.34 2.98 2.98 2.98 1.64 0 2.98-1.35 2.98-2.98C7.96 4.84 6.62 3.5 4.98 3.5zM2.4 21.5h5.16V8.9H2.4v12.6zM9.9 8.9h4.94v1.72h.07c.69-1.3 2.37-2.67 4.88-2.67 5.22 0 6.18 3.44 6.18 7.92v8.13h-5.15v-7.2c0-1.72-.03-3.93-2.4-3.93-2.4 0-2.77 1.87-2.77 3.8v7.33H9.9V8.9z"/></svg> LinkedIn';
+    socialLinks.insertBefore(a, ghFoot);
+  }
+  if (PROFILE.instagram) {
+    const a = document.createElement("a");
+    a.className = "btn ghost";
+    a.href = PROFILE.instagram;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg> Instagram';
+    socialLinks.insertBefore(a, ghFoot);
+  }
+  if (PROFILE.resumeUrl) {
+    const a = document.createElement("a");
+    a.className = "btn ghost";
+    a.href = PROFILE.resumeUrl;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Download CV';
+    document.querySelector(".actions").appendChild(a);
+  }
 
   // Photo viewer (gallery)
   const viewer = $("viewer");
@@ -813,6 +1009,7 @@
     });
     showPhoto(gallery.i);
     viewer.showModal();
+    requestAnimationFrame(() => viewer.classList.add("open"));
   }
 
   $("prev").onclick = () => showPhoto(gallery.i - 1);
@@ -822,6 +1019,7 @@
     if (e.key === "ArrowRight") showPhoto(gallery.i + 1);
   });
   viewer.addEventListener("click", (e) => { if (e.target === viewer) viewer.close(); });
+  viewer.addEventListener("close", () => viewer.classList.remove("open"));
 
   // Swipe left / right on the photo (touch screens)
   (function () {
@@ -907,6 +1105,37 @@
     }
     $("grid").appendChild(card);
   });
+
+  // Active section highlight in the nav (scroll-spy)
+  (function () {
+    const navLinks = [...document.querySelectorAll(".top nav a")];
+    const sections = [...document.querySelectorAll("main section[id]")];
+    if (!sections.length || !("IntersectionObserver" in window)) return;
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach((l) => l.removeAttribute("aria-current"));
+        const link = navLinks.find((l) => l.getAttribute("href") === "#" + entry.target.id);
+        if (link) link.setAttribute("aria-current", "true");
+      });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    sections.forEach((s) => spy.observe(s));
+  })();
+
+  // Back to top
+  (function () {
+    const btn = $("top-btn");
+    let ticking = false;
+    window.addEventListener("scroll", () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        btn.classList.toggle("show", window.scrollY > 700);
+        ticking = false;
+      });
+    }, { passive: true });
+    btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+  })();
 </script>
 </body>
 </html>
